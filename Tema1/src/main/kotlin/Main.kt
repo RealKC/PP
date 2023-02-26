@@ -10,5 +10,5 @@ fun main() {
     val parser = Parser(expr)
     val tree = parser.parse()
 
-    println("$expr = ${tree.evaluate()}")
+    println("$tree = ${tree.evaluate()}")
 }

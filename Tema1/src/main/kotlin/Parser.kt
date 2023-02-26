@@ -82,7 +82,15 @@ sealed class Expr {
         }
 
         override fun toString(): String {
-            return "Binary(left=$left, operator=$operator, right=$right)"
+            return "$left $right ${
+                when (operator) {
+                    TokenType.PLUS -> '+'
+                    TokenType.MINUS -> '-'
+                    TokenType.DIVIDE -> '/'
+                    TokenType.MULTIPLY -> '*'
+                    else -> throw RuntimeException("This should be unreachable")
+                }
+            }"
         }
     }
 
@@ -92,7 +100,7 @@ sealed class Expr {
         }
 
         override fun toString(): String {
-            return "Constant(value=$value)"
+            return "$value"
         }
     }
 
