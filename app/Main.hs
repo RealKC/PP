@@ -1,9 +1,13 @@
 module Main where
 
+import Data.Char (toUpper)
 import System.IO
 
 removePunctuation :: String -> String
 removePunctuation = filter (`notElem` ".,?!-_:;/()'\"")
+
+makeUppercase :: String -> String
+makeUppercase = map toUpper
 
 main :: IO ()
 main = do
@@ -11,4 +15,4 @@ main = do
   hFlush stdout
   filePath <- getLine
   contents <- readFile filePath
-  putStr (removePunctuation contents)
+  putStr (makeUppercase $ removePunctuation contents)
