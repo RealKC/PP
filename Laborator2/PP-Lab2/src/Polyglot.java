@@ -2,6 +2,9 @@
 
 import org.graalvm.polyglot.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 //clasa principala - aplicatie JAVA
 class Polyglot {
     //metoda privata pentru conversie low-case -> up-case folosind functia toupper() din R
@@ -48,13 +51,39 @@ class Polyglot {
         Context polyglot = Context.create();
         //construim un array de string-uri, folosind cuvinte din pagina web:  https://chrisseaton.com/truffleruby/tenthings/
         Value array = polyglot.eval("js", "[\"If\",\"we\",\"run\",\"the\",\"java\"];"); //\"command\",\"included\",\"in\",\"GraalVM\",\"we\",\"will\",\"be\",\"automatically\",\"using\",\"the\",\"Graal\",\"JIT\",\"compiler\",\"no\",\"extra\",\"configuration\",\"is\",\"needed\",\"I\",\"will\",\"use\",\"the\",\"time\",\"command\",\"to\",\"get\",\"the\",\"real\",\"wall\",\"clock\",\"elapsed\",\"time\",\"it\",\"takes\",\"to\",\"run\",\"the\",\"entire\",\"program\",\"from\",\"start\",\"to\",\"finish\",\"rather\",\"than\",\"setting\",\"up\",\"a\",\"complicated\",\"micro\",\"benchmark\",\"and\",\"I\",\"will\",\"use\",\"a\",\"large\",\"input\",\"so\",\"that\",\"we\",\"arent\",\"quibbling\",\"about\",\"a\",\"few\",\"seconds\",\"here\",\"or\",\"there\",\"The\",\"large.txt\",\"file\",\"is\",\"150\",\"MB\"];");
+
+        HashMap<Integer, ArrayList<String>> words = new HashMap<>();
+
         //pentru fiecare cuvant, convertim la upcase folosind R si calculam suma de control folosind PYTHON
         for (int i = 0; i < array.getArraySize(); i++) {
             String element = array.getArrayElement(i).asString();
             String upper = RToUpper(element);
             int crc = SumCRC(upper);
-            System.out.println(upper + " -> " + crc);
+
+            ArrayList<String> l;
+            if (words.containsKey(crc)) {
+                l = words.get(crc);
+            } else {
+                l = new ArrayList<>();
+            }
+            l.add(upper);
+            words.put(crc, l);
         }
+
+        words.forEach((crc, sameCrcWords) -> {
+            System.out.printf("%d -> [", crc);
+            boolean first = true;
+            for (String sameCrcWord : sameCrcWords) {
+                if (first) {
+                    System.out.printf("%s", sameCrcWord);
+                    first = false;
+                } else {
+                    System.out.printf(", %s", sameCrcWord);
+                }
+            }
+            System.out.println("]");
+        });
+
         // inchidem contextul Polyglot
         polyglot.close();
     }
