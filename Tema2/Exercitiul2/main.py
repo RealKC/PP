@@ -10,8 +10,6 @@ main <- function(output, colour) {
     data <- read.csv('dataset.txt')
     linReg <- lm(x ~ y, data)
 
-    input <- file("")
-
     svg(output)
     plot(linReg, col = colour)
 }
