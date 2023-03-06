@@ -8,10 +8,10 @@ main <- function(output, colour) {
     library("lattice")
 
     data <- read.csv('dataset.txt')
-    linReg <- lm(x ~ y, data)
 
     svg(output)
-    plot(linReg, col = colour)
+    print(xyplot(x ~ y, data, type = c("p", "r"), col = colour))
+    dev.off()
 }
 """)
     lin_reg(output, colour)
@@ -23,6 +23,8 @@ def main():
     colour = input('Input the colour for the points: ')
 
     output = output_path + '/' + output_name
+    if not output.endswith('.svg'):
+        output = output + '.svg'
     r_main(output, colour)
 
     subprocess.run(['xdg-open', output])
