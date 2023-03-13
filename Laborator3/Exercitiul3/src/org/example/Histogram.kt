@@ -1,6 +1,5 @@
 package org.example
 
-import org.example.RHistogram
 import java.io.File
 
 fun main(args: Array<String>) {
@@ -48,6 +47,12 @@ fun main(args: Array<String>) {
     }
     println()
 
+    val ascending = sortByHitCount(uniqueChars, true)
+    val descending = sortByHitCount(uniqueChars, false)
+
+    val frequencies = ascending.map { it.first }.toMutableList()
+    frequencies.addAll(descending.map { it.first })
+    RHistogram.buildHistogram(frequencies.toTypedArray(), "Points", false)
 }
 
 fun getUniqueWordCount(allWords: List<String>): MutableMap<String, Int> {
@@ -70,4 +75,23 @@ fun getUniqueCharCount(allChars: List<String>): MutableMap<Char, Int> {
     return result
 }
 
-//fun sortByHitCount
+
+fun sortByHitCount(allChars: Map<Char, Int>, how: Boolean): List<Pair<Int, Char>> {
+    val list = mutableListOf<Pair<Int, Char>>()
+
+    for (item in allChars) {
+        list.add(Pair(item.value, item.key))
+    }
+
+    if (how) {
+        list.sortBy {
+            it -> it.first
+        }
+    } else {
+        list.sortByDescending {
+            it -> it.first
+        }
+    }
+
+    return list
+}
