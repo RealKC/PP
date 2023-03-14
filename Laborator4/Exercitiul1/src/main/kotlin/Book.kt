@@ -1,4 +1,4 @@
-class Book(author: String, text: String, name: String, publisher: String): Serializeable {
+class Book(author: String, text: String, name: String, publisher: String, private var price: Double): Serializeable {
     private val content: Content = Content()
 
     init {
@@ -9,7 +9,7 @@ class Book(author: String, text: String, name: String, publisher: String): Seria
     }
 
     override fun toString(): String {
-        return "${content.getName()} by ${content.getAuthor()}, published by ${content.getPublisher()}\n\n${content.getText()}"
+        return "${content.getName()} by ${content.getAuthor()}, published by ${content.getPublisher()}, costs ${getPrice()} RON\n\n${content.getText()}"
     }
 
     fun getName(): String {
@@ -40,12 +40,20 @@ class Book(author: String, text: String, name: String, publisher: String): Seria
         return getPublisher() == publisher
     }
 
+    fun getPrice(): Double {
+        return price
+    }
+
+    fun setPrice(newPrice: Double) {
+        price = newPrice
+    }
+
     override fun toRaw(): String {
         return toString()
     }
 
     override fun toHTML(): String {
-        return "<p><b>${getName()}</b>, by <i>${getAuthor()}</i>, published by ${getPublisher()}<br><details>${getContent()}</details></p>"
+        return "<p><b>${getName()}</b>, by <i>${getAuthor()}</i>, published by ${getPublisher()}, costs ${getPrice()} RON<br><details>${getContent()}</details></p>"
     }
 
     override fun toJSON(): String {
@@ -55,6 +63,8 @@ class Book(author: String, text: String, name: String, publisher: String): Seria
                 "name": "${getAuthor()}",
                 "publisher": "${getPublisher()}",
                 "content": "${getContent()}",
+                "price": ${getPrice()},
+                "currency": "RON"
             }
         """.trimIndent()
     }
