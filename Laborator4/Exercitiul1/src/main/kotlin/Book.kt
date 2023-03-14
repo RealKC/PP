@@ -1,4 +1,4 @@
-class Book(author: String, text: String, name: String, publisher: String) {
+class Book(author: String, text: String, name: String, publisher: String): Serializeable {
     private val content: Content = Content()
 
     init {
@@ -38,5 +38,24 @@ class Book(author: String, text: String, name: String, publisher: String) {
 
     fun isPublishedBy(publisher: String): Boolean {
         return getPublisher() == publisher
+    }
+
+    override fun toRaw(): String {
+        return toString()
+    }
+
+    override fun toHTML(): String {
+        return "<p><b>${getName()}</b>, by <i>${getAuthor()}</i>, published by ${getPublisher()}<br><details>${getContent()}</details></p>"
+    }
+
+    override fun toJSON(): String {
+        return """
+            {
+                "author": "${getAuthor()}",
+                "name": "${getAuthor()}",
+                "publisher": "${getPublisher()}",
+                "content": "${getContent()}",
+            }
+        """.trimIndent()
     }
 }
