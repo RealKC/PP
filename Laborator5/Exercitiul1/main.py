@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from multiprocessing import Process, Queue
 
 
 def is_prime(n):
@@ -21,6 +22,7 @@ class Parser:
     def __init__(self, gui):
         self.result = "Result"
         self.integer_list = []
+        self.message_queue = Queue()
 
         self.gui = gui
         self.gui.title('Exemplul 1 cu Tkinter')
@@ -68,12 +70,16 @@ class Parser:
         print(result)
 
     def filter_primes(self):
-        new_list = []
-        for i in range(len(self.integer_list)):
-            if is_prime(int(self.integer_list[i])):
-                new_list.append(self.integer_list[i])
-        self.integer_list = new_list
-        self.update_result(self.integer_list)
+        def filter_primes_task(message_queue):
+            numbers = message_queue.get()
+            filtered = list(filter(lambda n: is_prime(n), numbers))
+            message_queue.put(filtered)
+
+        self.message_queue.put(self.integer_list)
+        task = Process(target=filter_primes_task, args=(self.message_queue,))
+        task.start()
+        task.join()
+        self.update_result(self.message_queue.get())
 
     def filter_odd(self):
         self.integer_list = list(filter(lambda n: int(n) % 2 == 0, self.integer_list))
