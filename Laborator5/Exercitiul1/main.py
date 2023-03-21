@@ -82,8 +82,16 @@ class Parser:
         self.update_result(self.message_queue.get())
 
     def filter_odd(self):
-        self.integer_list = list(filter(lambda n: int(n) % 2 == 0, self.integer_list))
-        self.update_result(self.integer_list)
+        def filter_odd_task(message_queue):
+            numbers = message_queue.get()
+            filtered = list(filter(lambda n: n % 2 == 0, numbers))
+            message_queue.put(filtered)
+
+        self.message_queue.put(self.integer_list)
+        task = Process(target=filter_odd_task, args=(self.message_queue,))
+        task.start()
+        task.join()
+        self.update_result(self.message_queue.get())
 
     def sum_numbers(self):
         thesum = sum(self.integer_list)
