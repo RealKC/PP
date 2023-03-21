@@ -94,8 +94,16 @@ class Parser:
         self.update_result(self.message_queue.get())
 
     def sum_numbers(self):
-        thesum = sum(self.integer_list)
-        self.update_result(thesum)
+        def sum_numbers_task(message_queue):
+            numbers = message_queue.get()
+            message_queue.put(sum(numbers))
+
+        self.message_queue.put(self.integer_list)
+        task = Process(target=sum_numbers_task, args=(self.message_queue,))
+        task.start()
+        task.join()
+        self.update_result(self.message_queue.get())
+
 
 if __name__ == '__main__':
     root = tk.Tk()
