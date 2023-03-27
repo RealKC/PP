@@ -3,9 +3,33 @@ from PyQt5.QtCore import QDir
 
 
 def on_browse_button_clicked(button, input_box):
-    file = QFileDialog.getOpenFileName(button, "Open File", QDir.currentPath())
+    file = QFileDialog.getOpenFileName(button, 'Open File', QDir.currentPath())
     print(file)
     input_box.setText(file[0])
+
+
+def convert_file_to_html(file):
+    with open(file, 'r') as file:
+        contents = file.read()
+    result = ""
+
+    first = True
+    for line in contents.splitlines():
+        if len(line) == 0:
+            continue
+
+        if first:  # prima linie e titlul
+            result += f"<h1>{line}</h1>"
+            first = False
+        else:
+            result += f"<p>{line}</p>"
+
+    return result
+
+
+def on_convert_to_html_clicked(file, result_box):
+    html = convert_file_to_html(file)
+    result_box.setText(html)
 
 
 def main():
@@ -20,18 +44,21 @@ def main():
     input_box.setMinimumWidth(500)
     grid.addWidget(input_box, 0, 0)
 
-    browse_button = QPushButton("browse")
+    browse_button = QPushButton('Browse')
     browse_button.clicked.connect(lambda: on_browse_button_clicked(browse_button, input_box))
     grid.addWidget(browse_button, 0, 1)
 
     result_view = QTextEdit()
-    result_view.setPlaceholderText("Result")
+    result_view.setPlaceholderText('Result')
+    result_view.setReadOnly(True)
     grid.addWidget(result_view, 1, 0)
 
     button_container = QWidget()
     vertical_layout = QVBoxLayout(button_container)
-    convert_to_html_button = QPushButton("Convert to HTML")
-    send_button = QPushButton("Send to C program")
+    convert_to_html_button = QPushButton('Convert to HTML')
+    convert_to_html_button.clicked.connect(lambda: on_convert_to_html_clicked(input_box.text(), result_view))
+
+    send_button = QPushButton('Send to C program')
     vertical_layout.addWidget(convert_to_html_button)
     vertical_layout.addWidget(send_button)
     grid.addWidget(button_container, 1, 1)
