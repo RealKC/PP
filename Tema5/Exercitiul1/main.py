@@ -3,9 +3,10 @@ from PyQt5.QtCore import QDir
 
 
 def on_browse_button_clicked(button, input_box):
-    file = QFileDialog.getOpenFileName(button, 'Open File', QDir.currentPath())
+    file = QFileDialog.getOpenFileName(button, 'Open File', QDir.currentPath(), filter="Text Files (*.txt)")
     print(file)
-    input_box.setText(file[0])
+    if len(file[0]) > 0:
+        input_box.setText(file[0])
 
 
 def convert_file_to_html(file):
