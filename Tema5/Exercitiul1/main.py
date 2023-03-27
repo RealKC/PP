@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QDir
+import sysv_ipc
 
 
 def on_browse_button_clicked(button, input_box):
@@ -33,6 +34,12 @@ def on_convert_to_html_clicked(file, result_box):
     result_box.setText(html)
 
 
+def on_send_clicked(file_name, html):
+    mq = sysv_ipc.MessageQueue(-1)
+    mq.send(file_name, type=1)
+    mq.send(html, type=2)
+
+
 def main():
     app = QApplication([])
     app.setApplicationName('Tema5/Exercitiul 1')
@@ -56,10 +63,13 @@ def main():
 
     button_container = QWidget()
     vertical_layout = QVBoxLayout(button_container)
+
     convert_to_html_button = QPushButton('Convert to HTML')
     convert_to_html_button.clicked.connect(lambda: on_convert_to_html_clicked(input_box.text(), result_view))
 
     send_button = QPushButton('Send to C program')
+    send_button.clicked.connect(lambda: on_send_clicked(input_box.text(), result_view.toHtml()))
+
     vertical_layout.addWidget(convert_to_html_button)
     vertical_layout.addWidget(send_button)
     grid.addWidget(button_container, 1, 1)
