@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+import sysv_ipc
 
 
 class App:
@@ -16,12 +17,19 @@ class App:
             Rect(20, 230, 100, 100), Rect(120, 230, 100, 100), Rect(220, 230, 100, 100)
         ]
         self._game_matrix = [0] * 9
-        self._current_player = self.X
 
-    def _toggle_player(self):
-        if self._current_player == self.X:
+        self._was_blocked = False
+        self._block = False
+        key = 777
+        try:
+            self._message_queue = sysv_ipc.MessageQueue(key)
+            self._msg_send_type = 1
+            self._msg_recv_type = 2
             self._current_player = self.O
-        else:
+        except sysv_ipc.ExistentialError:
+            self._message_queue = sysv_ipc.MessageQueue(key, flags=sysv_ipc.IPC_CREAT)
+            self._msg_send_type = 2
+            self._msg_recv_type = 1
             self._current_player = self.X
 
     def _winner(self):
@@ -60,12 +68,16 @@ class App:
         if event.type == pygame.QUIT:
             self._running = False
         elif event.type == pygame.MOUSEBUTTONUP:
+            if self._was_blocked:
+                return
+
             x, y = event.pos[0], event.pos[1]
+            self._block = True
 
             for idx, square in enumerate(self._game_rects):
                 if square.collidepoint(x, y):
+                    self._message_queue.send(f'{self._current_player}: {idx}', type=self._msg_send_type)
                     self._game_matrix[idx] = self._current_player
-                    self._toggle_player()
 
     def on_render(self):
         self._display_surface.fill("white")
@@ -98,7 +110,21 @@ class App:
         while self._running:
             for event in pygame.event.get():
                 self.on_event(event)
-                self.on_render()
+            self._was_blocked = False
+
+            self.on_render()
+
+            try:
+                msg = self._message_queue.receive(block=self._block, type=self._msg_recv_type)
+                data = msg[0]
+                split = data.split(b':')
+                player = split[0].decode('utf-8')
+                idx = int(split[1].decode('utf-8').strip())
+                self._game_matrix[idx] = player
+                self._block = False
+                self._was_blocked = True
+            except sysv_ipc.BusyError:
+                pass
 
         self.on_cleanup()
 
