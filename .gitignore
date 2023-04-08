@@ -6,3 +6,5 @@ out/
 *.txt
 target/
 *.bmp
+env/
+dist-newstyle/
