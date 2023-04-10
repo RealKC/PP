@@ -56,11 +56,44 @@ class HistoryLogRecord(record: String) : Comparable<HistoryLogRecord> {
     }
 }
 
+fun <T: Comparable<T>> max(a: T, b: T): T {
+    return if (a < b) {
+        b
+    } else {
+        a
+    }
+}
+
+fun <T: Comparable<T>> findAndReplace(target: T, replacement: T, collection: MutableMap<String, T>) {
+    var targetKey: String? = null
+
+    for (element in collection) {
+        if (element.value == target) {
+            targetKey = element.key
+        }
+    }
+
+    if (targetKey != null) {
+        collection[targetKey] = replacement
+    }
+}
+
 fun main(args: Array<String>) {
     val contents = File("history.log").readText()
+    val recordsList = contents.split("\n\n").map { HistoryLogRecord(it) }
 
+    val records = mutableMapOf<String, HistoryLogRecord>()
+    for (record in recordsList) {
+        records[record.startDate] = record
+    }
 
+    println("""Max between 'a' and 'b' is 'c'
+            - 'a' = ${recordsList[0]}
+            - 'b' = ${recordsList[1]}
+            - 'c' = ${max(recordsList[0], recordsList[1])}
+    """.trimMargin())
 
-    contents.split("\n\n").map { HistoryLogRecord(it) }.forEach { println(it) }
-
+    println("Original records: $records")
+    findAndReplace(recordsList[0], recordsList[1], records)
+    println("Modified records: $records")
 }
