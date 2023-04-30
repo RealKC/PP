@@ -1,7 +1,10 @@
+import sys
+
 from handlers import *
 
 if __name__ == '__main__':
-    contents = input("Give me a script:\n")
+    print("Give me a script:")
+    contents = sys.stdin.read()
 
     chain = BashHandler(PythonHandler(JavaHandler(KotlinHandler(None))))
     chain.handle(contents)

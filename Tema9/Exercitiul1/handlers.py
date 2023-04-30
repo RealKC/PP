@@ -22,7 +22,7 @@ class BashHandler(Handler):
 
     def handle(self, file: str):
         if self.looks_like_bash(file):
-            pass  # TODO
+            self.command.execute(file)
         elif self.next is not None:
             self.next.handle(file)
 
@@ -37,11 +37,12 @@ class PythonHandler(Handler):
     next: Handler | None
 
     def __init__(self, next: Handler | None):
+        super().__init__(PythonCommand())
         self.next = next
 
     def handle(self, file: str):
         if self.looks_like_python(file):
-            pass  # TODO
+            self.command.execute(file)
         elif self.next is not None:
             self.next.handle(file)
 
@@ -53,6 +54,9 @@ class PythonHandler(Handler):
         if "@staticmethod" in file and "from" in file:
             return True
 
+        if "from" in file and "import" in file:
+            return True
+
         return False
 
 
@@ -60,11 +64,12 @@ class KotlinHandler(Handler):
     next: Handler | None
 
     def __init__(self, next: Handler | None):
+        super().__init__(KotlinCommand())
         self.next = next
 
     def handle(self, file: str):
         if self.looks_like_kotlin(file):
-            pass  # TODO
+            self.command.execute(file)
         elif self.next is not None:
             self.next.handle(file)
 
@@ -78,10 +83,11 @@ class JavaHandler(Handler):
 
     def __init__(self, next: Handler | None):
         self.next = next
+        super().__init__(JavaCommand())
 
     def handle(self, file: str):
         if self.looks_like_java(file):
-            pass  # TODO
+            self.command.execute(file)
         elif self.next is not None:
             self.next.handle(file)
 
