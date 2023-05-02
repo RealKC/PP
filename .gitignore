@@ -8,3 +8,5 @@ target/
 *.bmp
 env/
 dist-newstyle/
+build/
+.gradle/
