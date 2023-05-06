@@ -86,7 +86,7 @@ fun processWithCoroutines(list: List<Int>, alpha: Int) = runBlocking {
         log("finished sorting", this)
     }
 
-    runBlocking {
+    launch {
         log("waiting for sorted list", this)
         val sortedNumbers = sortedQueue.receive()
         println(sortedNumbers)
