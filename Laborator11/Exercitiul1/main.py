@@ -22,64 +22,73 @@ def is_prime(n: int) -> bool:
     return True
 
 
-def countdown():
-    global NUMBERS
-    numbers = NUMBERS.copy()
-    numbers.sort()
-    numbers_set = filter(lambda n: is_prime(n), set(numbers))
+def operation(nums: list[int]):
+    nums = map(lambda n: n**2, filter(lambda n: is_prime(n), nums))
+    print(nums)
 
 
-def ver_1():
-    thread_1 = threading.Thread(target=countdown)
-    thread_2 = threading.Thread(target=countdown)
-    thread_1.start()
-    thread_2.start()
-    thread_1.join()
-    thread_2.join()
+def ver_1(nums: list[int]):
+    threads = []
+    thread_count = 2
+    size = len(nums) // thread_count
+    for i in range(thread_count):
+        threads.append(threading.Thread(target=lambda: operation(nums[i * size:(i + 1) * size])))
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
 
 
-def ver_2():
-    countdown()
-    countdown()
+def ver_2(nums: list[int]):
+    operation(nums)
+    operation(nums)
 
 
-def ver_3():
-    process_1 = multiprocessing.Process(target=countdown)
+def ver_3(nums: list[int]):
+    processes = []
+    thread_count = 2
+    size = len(nums) // thread_count
+    for i in range(thread_count):
+        processes.append(multiprocessing.Process(target=lambda: operation(nums[i * size:(i + 1) * size])))
 
-    process_2 = multiprocessing.Process(target=countdown)
-    process_1.start()
-    process_2.start()
-    process_1.join()
-    process_2.join()
+    for process in processes:
+        process.start()
+
+    for process in processes:
+        process.join()
 
 
-def ver_4():
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        future = executor.submit(countdown())
-        future = executor.submit(countdown())
+def ver_4(nums: list[int]):
+    max_workers = 2
+    size = len(nums) // max_workers
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for i in range(max_workers):
+            future = executor.submit(lambda: operation(nums[i * size:(i + 1) * size]))
 
 
 if __name__ == '__main__':
     start = time.time()
-    ver_1()
+    ver_1(NUMBERS.copy())
     end = time.time()
     print("\n Timp executie pseudoparalelism cu GIL")
     print(end - start)
 
     start = time.time()
-    ver_2()
+    ver_2(NUMBERS.copy())
     end = time.time()
     print("\n Timp executie secvential")
     print(end - start)
 
     start = time.time()
-    ver_3()
+    ver_3(NUMBERS.copy())
     end = time.time()
     print("\n Timp executie paralela cu multiprocessing")
     print(end - start)
 
     start = time.time()
-    ver_4()
+    ver_4(NUMBERS.copy())
     end = time.time()
     print("\n Timp executie paralela cu concurrent.futures")
     print(end - start)
