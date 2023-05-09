@@ -38,6 +38,8 @@ fun coroutines(end: Int): Unit = runBlocking {
         channel.send(Message.Number(i))
     }
 
+    repeat (4) { channel.send(Message.End) }
+
     jobs.forEach { it.join() }
 
     println("lol")
