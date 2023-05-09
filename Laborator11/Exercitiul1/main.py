@@ -22,8 +22,12 @@ def is_prime(n: int) -> bool:
     return True
 
 
+def increment_all(nums: list[int]) -> list[int]:
+    return list(map(lambda n: n + 1, nums))
+
+
 def operation(nums: list[int]):
-    nums = map(lambda n: n**2, filter(lambda n: is_prime(n), nums))
+    nums = map(lambda n: n**2, filter(lambda n: is_prime(n), increment_all(nums)))
     print(nums)
 
 
