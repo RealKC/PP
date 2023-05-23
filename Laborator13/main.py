@@ -2,6 +2,8 @@ import types
 from typing import *
 from functools import reduce
 from math import sqrt
+from functional import seq
+from functional.util import unpack
 
 
 ### Exercitiul 1 ###
@@ -70,6 +72,7 @@ def print_perfect_squares(n: int):
     print(f'The perfect squares in the interval [0, {n}] are: ')
     for perf_square in perfect_squares:
         print(perf_square, end=' ')
+    print()
 
 
 if __name__ == "__main__":
@@ -88,3 +91,8 @@ if __name__ == "__main__":
 
     # Exercitiul 4
     print_perfect_squares(17)
+
+    # Exercitiul 5
+    string = input('Give me a string: ')
+    distinct = seq(list(string)).distinct().reduce(lambda acc, x: acc + x, '')
+    print(distinct)
