@@ -5,7 +5,6 @@ from typing import *
 from functools import reduce
 from math import sqrt
 from functional import seq
-from functional.util import unpack
 
 
 ### Exercitiul 1 ###
