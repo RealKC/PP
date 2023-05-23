@@ -1,3 +1,5 @@
+import functools
+import itertools
 import types
 from typing import *
 from functools import reduce
@@ -75,6 +77,21 @@ def print_perfect_squares(n: int):
     print()
 
 
+### Exercitiul 7 ###
+
+def f(x: int, k: int) -> int:
+    return x * x + k
+
+
+def firstapproach(lst: list[int], k: int) -> list[int]:
+    prt = functools.partial(f, k=k)
+    return list(map(prt, lst))
+
+
+def secondapproach(lst: list[int], k: int) -> list[int]:
+    return list(itertools.starmap(f, map(lambda x: (x, k), lst)))
+
+
 if __name__ == "__main__":
     # Exercitiul 1
     print(f'3 is prime? {int(3).is_prime()}')
@@ -104,3 +121,9 @@ if __name__ == "__main__":
         .map(lambda tup: f'{tup[0]}{tup[1]}')\
         .reduce(lambda acc, s: acc + s, '')
     print(f'-> {reduced}')
+
+    # Exercitiul 7
+    lst = [1, 2, 3, 4, 5]
+    k = 2
+    print(f'first approach (partial application) :{firstapproach(lst, k)}')
+    print(f'second approach (starmap) : {secondapproach(lst, k)}')
