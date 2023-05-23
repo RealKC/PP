@@ -95,4 +95,12 @@ if __name__ == "__main__":
     # Exercitiul 5
     string = input('Give me a string: ')
     distinct = seq(list(string)).distinct().reduce(lambda acc, x: acc + x, '')
-    print(distinct)
+    print(f'-> {distinct}')
+
+    # Exercitiul 6
+    string = input('Give me a string: ')
+    reduced = seq(list(string))\
+        .count_by_value()\
+        .map(lambda tup: f'{tup[0]}{tup[1]}')\
+        .reduce(lambda acc, s: acc + s, '')
+    print(f'-> {reduced}')
