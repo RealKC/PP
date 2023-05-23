@@ -58,6 +58,20 @@ def fake_zip(a: List[T], b: List[U]) -> Iterable[Tuple[T, U]]:
     return map(lambda tup: (tup[1], b[tup[0]]), enumerate(a))
 
 
+### Exercitiul 4 ###
+
+def is_perfect_square(n: int) -> bool:
+    return sqrt(n) == int(sqrt(n))
+
+
+def print_perfect_squares(n: int):
+    perfect_squares = filter(is_perfect_square, (x for x in range(n)))
+
+    print(f'The perfect squares in the interval [0, {n}] are: ')
+    for perf_square in perfect_squares:
+        print(perf_square, end=' ')
+
+
 if __name__ == "__main__":
     # Exercitiul 1
     print(f'3 is prime? {int(3).is_prime()}')
@@ -71,3 +85,6 @@ if __name__ == "__main__":
     zipped = fake_zip(a, b)
     for thing in zipped:
         print(thing)
+
+    # Exercitiul 4
+    print_perfect_squares(17)
