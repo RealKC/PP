@@ -1,4 +1,5 @@
 import types
+from typing import *
 from functools import reduce
 from math import sqrt
 
@@ -48,9 +49,25 @@ class str(str):
         return reduce(lambda acc, s: acc + s, mapped)
 
 
+### Exercitiul 3 ###
+T = TypeVar('T')
+U = TypeVar('U')
+
+
+def fake_zip(a: List[T], b: List[U]) -> Iterable[Tuple[T, U]]:
+    return map(lambda tup: (tup[1], b[tup[0]]), enumerate(a))
+
+
 if __name__ == "__main__":
     # Exercitiul 1
     print(f'3 is prime? {int(3).is_prime()}')
 
     # Exercitiul 2
     print(str("Hello world").to_pascal_case())
+
+    # Exercitiul 3
+    a = [1, 2, 3]
+    b = [4, 5, 6]
+    zipped = fake_zip(a, b)
+    for thing in zipped:
+        print(thing)
