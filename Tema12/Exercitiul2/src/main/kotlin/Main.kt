@@ -2,7 +2,7 @@ import java.io.File
 import java.util.Scanner
 
 fun rotn(s: String, n: Int) = s.map {
-    val x = it + 13
+    val x = it + n
     val limit = if (it.isUpperCase()) 'Z' else 'z'
     when {
         it.isLetter() -> if (x > limit) x - 26 else x
