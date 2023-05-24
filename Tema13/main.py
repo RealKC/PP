@@ -92,5 +92,13 @@ def exercitiul1():
     print(f'missing emails {missing_emails}')
 
 
+def exercitiul3():
+    lst = seq(1, 21, 75, 39, 7, 2, 35, 3, 31, 7, 8)
+    result = lst.filter(lambda x: x >= 5).grouped(2).map(lambda l: l[0] * l[1]).sum()
+    print(f'Processed: {lst}')
+    print(f'\t=>{result}')
+
+
 if __name__ == "__main__":
     exercitiul1()
+    exercitiul3()
