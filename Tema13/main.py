@@ -1,6 +1,6 @@
 from datetime import date
 from functional import seq
-
+from more_itertools import map_reduce
 
 ### Exercitiul 1 ###
 
@@ -92,6 +92,15 @@ def exercitiul1():
     print(f'missing emails {missing_emails}')
 
 
+### Exercitiul 2 ###
+def exercitiul2():
+    text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    sorted = map_reduce(text.split(), keyfunc=lambda x: x, valuefunc=lambda x: (x[0], x), reducefunc=lambda lst: print(lst))
+    print(sorted)
+
+
+### Exercitiul 3 ###
+
 def exercitiul3():
     lst = seq(1, 21, 75, 39, 7, 2, 35, 3, 31, 7, 8)
     result = lst.filter(lambda x: x >= 5).grouped(2).map(lambda l: l[0] * l[1]).sum()
@@ -100,5 +109,9 @@ def exercitiul3():
 
 
 if __name__ == "__main__":
+    print("\n============== EXERCITIUL 1 ==============\n")
     exercitiul1()
+    print("\n============== EXERCITIUL 2 ==============\n")
+    exercitiul2()
+    print("\n============== EXERCITIUL 3 ==============\n")
     exercitiul3()
