@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import date
 from functional import seq
 from more_itertools import map_reduce
@@ -95,9 +96,13 @@ def exercitiul1():
 ### Exercitiul 2 ###
 def exercitiul2():
     text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-    sorted = map_reduce(text.split(), keyfunc=lambda x: x, valuefunc=lambda x: (x[0], x), reducefunc=lambda lst: print(lst))
-    print(sorted)
+    sorted_words_dict = map_reduce(text.split(), keyfunc=lambda x: x[0], reducefunc=lambda lst: sorted(lst))
+    sorted_keys = sorted(sorted_words_dict)
+    sorted_words = []
+    for key in sorted_keys:
+        sorted_words.extend(sorted_words_dict[key])
 
+    assert sorted_words == sorted(text.split())
 
 ### Exercitiul 3 ###
 
