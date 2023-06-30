@@ -10,6 +10,16 @@ class MamiferImplementor(ABC):
         raise NotImplementedError(f'MamiferImplementor: not implemented {self.__class__.__name__}')
 
 
+def decorate_impl(replaced):
+    def decorator(func):
+        def interact(this, other):
+            if replaced(this, other) is not None:
+                func(this, other)
+
+        return interact
+    return decorator
+
+
 class Mamifer:
     implementation: MamiferImplementor
 
@@ -42,13 +52,9 @@ class Caine(MamiferImplementor):
 
 
 class Om(MamiferImplementor):
+    @decorate_impl(lambda this, other: print(f'Hai la suc {other}') if isinstance(other, Femeie) else False)
     def interact_with_impl(self, other):
-        if isinstance(other, Femeie):
-            print(f'Buna {other}, vrei sa iesim la o cafea?')
-        elif isinstance(other, Pisica):
-            print(f'Ce pisica draguta!')
-        else:
-            print(f'Sunt barbat si interactionez cu {other}')
+        print(f'Sunt barbat si interactionez cu {other}')
 
 
 if __name__ == '__main__':
