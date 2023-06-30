@@ -11,3 +11,5 @@ dist-newstyle/
 build/
 .gradle/
 __pycache__
+*.zip
+*.7z
